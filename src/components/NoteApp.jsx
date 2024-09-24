@@ -8,11 +8,13 @@ class NoteApp extends React.Component {
     super(props);
     this.state = {
       notes: getInitialData(),
+      searchQuery: '',
     };
 
     this.onDeleteHandler = this.onDeleteHandler.bind(this);
     this.onArchiveHandler = this.onArchiveHandler.bind(this);
     this.onAddNoteHandler = this.onAddNoteHandler.bind(this);
+    this.onSearchHandler = this.onSearchHandler.bind(this);
   }
 
   onDeleteHandler(id) {
@@ -23,12 +25,12 @@ class NoteApp extends React.Component {
   onArchiveHandler(id) {
     const notes = this.state.notes.map((note) => {
       if (note.id === id) {
-        return { ...note, archived: !note.archived}
+        return { ...note, archived: !note.archived };
       }
       return note;
     });
 
-    this.setState({notes});
+    this.setState({ notes });
   }
 
   onAddNoteHandler({ title, body }) {
@@ -42,17 +44,30 @@ class NoteApp extends React.Component {
             body,
             createdAt: +new Date(),
             archived: false,
-          }
-        ]
-      }
-    })
+          },
+        ],
+      };
+    });
+  }
+
+  onSearchHandler(query) {
+    this.setState({ searchQuery: query });
   }
 
   render() {
+    const filteredNotes = this.state.notes.filter((note) =>
+      note.title.toLowerCase().includes(this.state.searchQuery.toLowerCase())
+    );
+
     return (
       <div className="note-app">
-        <NoteHeader />
-        <NoteBody notes={this.state.notes} onDelete={this.onDeleteHandler} onArchive={this.onArchiveHandler} addNote={this.onAddNoteHandler}/>
+        <NoteHeader onSearch={this.onSearchHandler} />
+        <NoteBody
+          notes={filteredNotes}
+          onDelete={this.onDeleteHandler}
+          onArchive={this.onArchiveHandler}
+          addNote={this.onAddNoteHandler}
+        />
       </div>
     );
   }

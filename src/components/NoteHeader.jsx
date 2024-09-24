@@ -1,11 +1,11 @@
 import React from "react";
 import NoteSearch from "./NoteSearch.jsx";
 
-function NoteHeader(params) {
+function NoteHeader({ onSearch }) {
   return (
     <div className="note-app__header">
       <h1>Notes</h1>
-      <NoteSearch />
+      <NoteSearch onSearch={onSearch} />
     </div>
   );
 }
